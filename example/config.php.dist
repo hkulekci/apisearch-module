@@ -1,0 +1,11 @@
+<?php
+
+return [
+    'apisearch' => [
+        'host'  => '',
+        'version' => 'v1',
+        'repository' => \Apisearch\Repository\HttpRepository::class,
+        'token' => '',
+        'appId' => '',
+    ]
+];
