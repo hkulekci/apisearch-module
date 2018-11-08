@@ -3,7 +3,7 @@
 You can install it like below.
 
 ```
-composer require hkulekci/apisearch-io-module
+composer require hkulekci/apisearch-module
 ```
 
 Then you need to set some configuration. You can create a `apisearch.local.php` file into your `config/autoload` folder.
