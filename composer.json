@@ -14,6 +14,7 @@
         "apisearch-io/php-client": "dev-master"
     },
     "require-dev": {
+        "roave/security-advisories": "dev-master",
         "zendframework/zend-servicemanager": "^3.3"
     },
     "autoload": {

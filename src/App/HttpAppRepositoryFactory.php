@@ -14,17 +14,21 @@ use Apisearch\Http\RetryMap;
 use Apisearch\Model\TokenUUID;
 use Apisearch\Repository\RepositoryReferenceBuilder;
 use GuzzleHttp\Client;
-use Psr\Container\ContainerInterface;
+use Interop\Container\ContainerInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * Class HttpAppRepositoryFactory
  * @package Apisearch
  */
-class HttpAppRepositoryFactory
+class HttpAppRepositoryFactory implements FactoryInterface
 {
-    public function __invoke(ContainerInterface $container) : HttpAppRepository
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null) : HttpAppRepository
     {
-        $configuration = $container->get(Configuration::class);
+        /** @var Configuration $configuration */
+        /** @var ServiceManager $container */
+        $configuration = $options ? $container->build(Configuration::class, $options) : $container->get(Configuration::class);
         $guzzleClient = new Client([
             'host' => $configuration->getHost(),
         ]);
@@ -36,6 +40,7 @@ class HttpAppRepositoryFactory
                 new RetryMap()
             )
         );
+
         $repository->setCredentials(
             RepositoryReferenceBuilder::createFromConfiguration($configuration),
             TokenUUID::createById($configuration->getToken())

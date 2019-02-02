@@ -11,24 +11,25 @@ namespace Apisearch\Repository;
 use Apisearch\Configuration;
 use Apisearch\Model\TokenUUID;
 use Apisearch\Transformer\Transformer;
-use Psr\Container\ContainerInterface;
+use Interop\Container\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Zend\ServiceManager\Factory\FactoryInterface;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * Class TransformableRepositoryFactory
  * @package Apisearch
  */
-class TransformableRepositoryFactory
+class TransformableRepositoryFactory implements FactoryInterface
 {
-    public function __invoke(ContainerInterface $container) : TransformableRepository
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null) : TransformableRepository
     {
+        /** @var Configuration $configuration */
+        /** @var ServiceManager $container */
         $configuration = $container->get(Configuration::class);
         $config = $container->get('config');
-        $configRepository = HttpRepository::class;
-        if (isset($config['apisearch']['repository'])) {
-            $configRepository = $config['apisearch']['repository'];
-        }
-        $baseRepository = $container->get($configRepository);
+        $configRepository = $config['apisearch']['repository'] ?? HttpRepository::class;
+        $baseRepository = $options ? $container->build($configRepository, $options) : $container->get($configRepository);
         $repository = new TransformableRepository($baseRepository, new Transformer(new EventDispatcher()));
         $repository->setCredentials(
             RepositoryReferenceBuilder::createFromConfiguration($configuration),

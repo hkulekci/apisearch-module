@@ -13,17 +13,21 @@ use Apisearch\Http\GuzzleClient;
 use Apisearch\Http\RetryMap;
 use Apisearch\Model\TokenUUID;
 use GuzzleHttp\Client;
-use Psr\Container\ContainerInterface;
+use Interop\Container\ContainerInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
+use Zend\ServiceManager\ServiceManager;
 
 /**
  * Class HttpRepositoryFactory
  * @package Apisearch
  */
-class HttpRepositoryFactory
+class HttpRepositoryFactory implements FactoryInterface
 {
-    public function __invoke(ContainerInterface $container): HttpRepository
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): HttpRepository
     {
-        $configuration = $container->get(Configuration::class);
+        /** @var Configuration $configuration */
+        /** @var ServiceManager $container */
+        $configuration = $options ? $container->build(Configuration::class, $options) : $container->get(Configuration::class);
         $guzzleClient = new Client([
             'host' => $configuration->getHost(),
         ]);
