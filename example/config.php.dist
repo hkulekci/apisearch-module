@@ -7,5 +7,8 @@ return [
         'repository' => \Apisearch\Repository\HttpRepository::class,
         'token' => '',
         'appId' => '',
+        'diskRepository' => [
+            'filename' => 'data/file.data',
+        ],
     ]
 ];

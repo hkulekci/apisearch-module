@@ -1,4 +1,9 @@
 <?php
+/**
+ * @author    Haydar KULEKCI <haydarkulekci@gmail.com>
+ * @license   MIT
+ */
+
 namespace Apisearch\Repository;
 
 use Apisearch\Configuration;

@@ -9,10 +9,10 @@ declare(strict_types=1);
 namespace Apisearch\Repository;
 
 use Apisearch\Configuration;
-use Apisearch\Http\GuzzleClient;
+use Apisearch\Http\CurlAdapter;
 use Apisearch\Http\RetryMap;
+use Apisearch\Http\TCPClient;
 use Apisearch\Model\TokenUUID;
-use GuzzleHttp\Client;
 use Interop\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Zend\ServiceManager\ServiceManager;
@@ -28,13 +28,10 @@ class HttpRepositoryFactory implements FactoryInterface
         /** @var Configuration $configuration */
         /** @var ServiceManager $container */
         $configuration = $options ? $container->build(Configuration::class, $options) : $container->get(Configuration::class);
-        $guzzleClient = new Client([
-            'host' => $configuration->getHost(),
-        ]);
         $repository = new HttpRepository(
-            new GuzzleClient(
-                $guzzleClient,
+            new TCPClient(
                 $configuration->getHost(),
+                new CurlAdapter(),
                 $configuration->getVersion(),
                 new RetryMap()
             )
